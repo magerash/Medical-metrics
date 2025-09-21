@@ -389,13 +389,17 @@ function saveMedicalRecords(data) {
         }
         
         if (!exists) {
+          // Исправляем обработку нулевых значений
+          const minValue = record.min === 0 ? 0 : (record.min || '');
+          const maxValue = record.max === 0 ? 0 : (record.max || '');
+          
           newBaseRows.push([
             data.category,
             data.material,
             record.indicator,
             '', // Показатель-лат. (пустой)
-            record.min || '',
-            record.max || '',
+            minValue,
+            maxValue,
             record.unit || ''
           ]);
         }
@@ -503,6 +507,7 @@ function saveMedicalRecords(data) {
     };
   }
 }
+
 /**
  * Тестовая функция для проверки структуры таблицы
  */

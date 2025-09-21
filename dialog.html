@@ -279,12 +279,14 @@
         opacity: 1;
       }
     }
+
+    .custom-input {
+      margin-top: 5px;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>📝 Добавить медицинские данные</h2>
-
     <div id="successMessage" class="success-message"></div>
 
     <form id="medicalForm">
@@ -298,29 +300,33 @@
           </div>
           <div class="form-group">
             <label for="category">Категория</label>
-            <select id="category" name="category" required onchange="updateIndicators()">
+            <select id="category" name="category" required onchange="toggleCustomInput('category')">
               <option value="">Выберите категорию...</option>
             </select>
+            <input type="text" id="category_custom" class="custom-input" placeholder="Введите категорию">
           </div>
           <div class="form-group">
             <label for="material">Вид материала</label>
-            <select id="material" name="material" required onchange="updateIndicators()">
+            <select id="material" name="material" required onchange="toggleCustomInput('material')">
               <option value="">Выберите материал...</option>
             </select>
+            <input type="text" id="material_custom" class="custom-input" placeholder="Введите вид материала">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label for="organization">Организация</label>
-            <select id="organization" name="organization">
+            <select id="organization" name="organization" onchange="toggleCustomInput('organization')">
               <option value="">Выберите организацию...</option>
             </select>
+            <input type="text" id="organization_custom" class="custom-input" placeholder="Введите организацию">
           </div>
           <div class="form-group">
             <label for="doctor">Врач</label>
-            <select id="doctor" name="doctor">
+            <select id="doctor" name="doctor" onchange="toggleCustomInput('doctor')">
               <option value="">Выберите врача...</option>
             </select>
+            <input type="text" id="doctor_custom" class="custom-input" placeholder="Введите врача">
           </div>
         </div>
       </div>
@@ -357,11 +363,36 @@
       <div class="loading-spinner"></div>
       <div class="loading-text">Сохранение данных...</div>
     </div>
-  </div>
 
   <script>
     let availableIndicators = [];
     let rowCounter = 0;
+
+    // Функция переключения между выбором из списка и вводом своего значения
+    function toggleCustomInput(fieldName) {
+      const select = document.getElementById(fieldName);
+      const customInput = document.getElementById(fieldName + '_custom');
+      
+      if (select.value === '__custom__') {
+        customInput.style.display = 'block';
+        customInput.focus();
+      } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+      }
+    }
+
+    // Функция получения значения поля (из списка или своего ввода)
+    function getFieldValue(fieldName) {
+      const select = document.getElementById(fieldName);
+      const customInput = document.getElementById(fieldName + '_custom');
+      
+      if (select.value === '__custom__') {
+        return customInput.value;
+      } else {
+        return select.value;
+      }
+    }
 
     // Функция добавления строки записи
     function addRecordRow() {
@@ -408,8 +439,8 @@
     function onIndicatorChange(rowId) {
       const select = document.getElementById('indicator_' + rowId);
       const customInput = document.getElementById('indicator_custom_' + rowId);
-      const category = document.getElementById('category').value;
-      const material = document.getElementById('material').value;
+      const category = getFieldValue('category');
+      const material = getFieldValue('material');
 
       if (select.value === '__new__') {
         customInput.style.display = 'block';
@@ -476,6 +507,12 @@
             option.textContent = cat;
             select.appendChild(option);
           });
+          
+          // Добавляем опцию для ввода своего значения
+          const customOption = document.createElement('option');
+          customOption.value = '__custom__';
+          customOption.textContent = '✏️ Ввести свою категорию';
+          select.appendChild(customOption);
         })
         .withFailureHandler(function(error) {
           console.error('Ошибка загрузки категорий:', error);
@@ -501,6 +538,12 @@
             option.textContent = mat;
             select.appendChild(option);
           });
+          
+          // Добавляем опцию для ввода своего значения
+          const customOption = document.createElement('option');
+          customOption.value = '__custom__';
+          customOption.textContent = '✏️ Ввести свой материал';
+          select.appendChild(customOption);
         })
         .withFailureHandler(function(error) {
           console.error('Ошибка загрузки материалов:', error);
@@ -526,6 +569,12 @@
             option.textContent = org;
             select.appendChild(option);
           });
+          
+          // Добавляем опцию для ввода своего значения
+          const customOption = document.createElement('option');
+          customOption.value = '__custom__';
+          customOption.textContent = '✏️ Ввести свою организацию';
+          select.appendChild(customOption);
         })
         .withFailureHandler(function(error) {
           console.error('Ошибка загрузки организаций:', error);
@@ -550,6 +599,12 @@
             option.textContent = doc;
             select.appendChild(option);
           });
+          
+          // Добавляем опцию для ввода своего значения
+          const customOption = document.createElement('option');
+          customOption.value = '__custom__';
+          customOption.textContent = '✏️ Ввести своего врача';
+          select.appendChild(customOption);
         })
         .withFailureHandler(function(error) {
           console.error('Ошибка загрузки врачей:', error);
@@ -558,8 +613,8 @@
     }
 
     function updateIndicators() {
-      const category = document.getElementById('category').value;
-      const material = document.getElementById('material').value;
+      const category = getFieldValue('category');
+      const material = getFieldValue('material');
 
       if (category && material) {
         google.script.run
@@ -597,10 +652,10 @@
 
       const data = {
         date: document.getElementById('date').value,
-        category: document.getElementById('category').value,
-        material: document.getElementById('material').value,
-        organization: document.getElementById('organization').value,
-        doctor: document.getElementById('doctor').value,
+        category: getFieldValue('category'),
+        material: getFieldValue('material'),
+        organization: getFieldValue('organization'),
+        doctor: getFieldValue('doctor'),
         records: []
       };
 
@@ -698,22 +753,26 @@
     }
 
     function resetForm() {
-      const category = document.getElementById('category').value;
-      const material = document.getElementById('material').value;
-      
+      // Сбрасываем основные поля
       document.getElementById('medicalForm').reset();
       
+      // Сбрасываем кастомные поля ввода
+      document.querySelectorAll('.custom-input').forEach(input => {
+        input.style.display = 'none';
+        input.value = '';
+      });
+      
+      // Устанавливаем текущую дату
       const now = new Date();
       const timezoneOffset = now.getTimezoneOffset() * 60000;
       const localISOTime = new Date(now - timezoneOffset).toISOString().split('T')[0];
       document.getElementById('date').value = localISOTime;
       
-      document.getElementById('category').value = category;
-      document.getElementById('material').value = material;
-      
+      // Очищаем таблицу показателей
       document.getElementById('recordsBody').innerHTML = '';
       rowCounter = 0;
       
+      // Добавляем новую строку
       addRecordRow();
     }
 
