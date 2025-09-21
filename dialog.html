@@ -1,0 +1,764 @@
+</script>
+</body>
+</html><!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="utf-8">
+  <title>Добавить медицинские данные</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      font-size: 28px;
+      font-weight: 600;
+      color: #1a1a2e;
+      margin-bottom: 28px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .icon-medical {
+      font-size: 32px;
+    }
+
+    .form-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f7f9fc;
+      border-radius: 12px;
+      border: 1px solid #e1e8ed;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #4a4a5e;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    select, input[type="date"], input[type="text"], input[type="number"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e1e8ed;
+      background: white;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      color: #1a1a2e;
+    }
+
+    select:focus, input:focus {
+      outline: none;
+      border-color: #4facfe;
+      box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+    }
+
+    .records-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 15px;
+    }
+
+    .records-table th {
+      background: #4facfe;
+      color: white;
+      padding: 12px;
+      text-align: left;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: none;
+    }
+
+    .records-table th:first-child {
+      border-radius: 8px 0 0 0;
+    }
+
+    .records-table th:last-child {
+      border-radius: 0 8px 0 0;
+    }
+
+    .records-table td {
+      padding: 8px;
+      background: white;
+      border: 1px solid #e1e8ed;
+    }
+
+    .records-table input, .records-table select {
+      width: 100%;
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .records-table .value-input {
+      width: 80px;
+    }
+
+    .records-table .min-max-input {
+      width: 60px;
+    }
+
+    .records-table .unit-input {
+      width: 80px;
+    }
+
+    .btn-add-row {
+      background: #4facfe;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-row:hover {
+      background: #3a9aec;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+    }
+
+    .btn-remove {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .btn-remove:hover {
+      background: #ff5252;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      color: white;
+      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .btn-secondary {
+      background: #f7f7fc;
+      color: #4a4a5e;
+    }
+
+    .btn-secondary:hover {
+      background: #ececf4;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 40px;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f7f7fc;
+      border-top-color: #4facfe;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .success-message {
+      display: none;
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .info-badge {
+      background: #e7f3ff;
+      color: #0066cc;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><span class="icon-medical">🏥</span> Добавить медицинские данные</h2>
+
+    <div id="successMessage" class="success-message"></div>
+
+    <form id="medicalForm">
+      <!-- Основные данные -->
+      <div class="form-section">
+        <div class="section-title">Основные данные</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="date">Дата исследования</label>
+            <input type="date" id="date" name="date" required>
+          </div>
+          <div class="form-group">
+            <label for="category">Категория</label>
+            <select id="category" name="category" required onchange="updateIndicators()">
+              <option value="">Выберите категорию...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="material">Вид материала</label>
+            <select id="material" name="material" required onchange="updateIndicators()">
+              <option value="">Выберите материал...</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="organization">Организация</label>
+            <select id="organization" name="organization">
+              <option value="">Выберите организацию...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="doctor">Врач</label>
+            <select id="doctor" name="doctor">
+              <option value="">Выберите врача...</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Показатели -->
+      <div class="form-section">
+        <div class="section-title">Показатели и значения</div>
+        <table class="records-table" id="recordsTable">
+          <thead>
+            <tr>
+              <th style="width: 25%">Показатель</th>
+              <th style="width: 15%">Значение</th>
+              <th style="width: 10%">Min</th>
+              <th style="width: 10%">Max</th>
+              <th style="width: 10%">Ед. изм.</th>
+              <th style="width: 20%">Комментарий</th>
+              <th style="width: 10%">Действие</th>
+            </tr>
+          </thead>
+          <tbody id="recordsBody">
+            <!-- Динамически добавляемые строки -->
+          </tbody>
+        </table>
+        <button type="button" class="btn-add-row" onclick="addRecordRow()">+ Добавить показатель</button>
+      </div>
+
+      <div class="button-group">
+        <button type="button" class="btn btn-secondary" onclick="closeDialog()">Отмена</button>
+        <button type="submit" class="btn btn-primary" id="saveBtn">Сохранить записи</button>
+      </div>
+    </form>
+
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Сохранение данных...</div>
+    </div>
+  </div>
+
+  <script>
+    let availableIndicators = [];
+    let rowCounter = 0;
+
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Инициализация формы...');
+      
+      // Устанавливаем текущую дату с учетом временной зоны
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const today = `${year}-${month}-${day}`;
+      
+      document.getElementById('date').value = today;
+      console.log('Дата установлена: ' + today);
+
+      // Загружаем справочники
+      loadCategories();
+      loadMaterials();
+      loadOrganizations();
+      loadDoctors();
+
+      // Добавляем первую строку для ввода показателя
+      setTimeout(function() {
+        addRecordRow();
+      }, 100);
+    });
+
+    function loadCategories() {
+      console.log('Загрузка категорий...');
+      google.script.run
+        .withSuccessHandler(function(categories) {
+          console.log('Получено категорий: ' + categories.length);
+          const select = document.getElementById('category');
+          
+          // Очищаем существующие опции кроме первой
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+          
+          categories.forEach(function(cat) {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            select.appendChild(option);
+          });
+        })
+        .withFailureHandler(function(error) {
+          console.error('Ошибка загрузки категорий:', error);
+          handleError(error);
+        })
+        .getCategories();
+    }
+
+    function loadMaterials() {
+      console.log('Загрузка материалов...');
+      google.script.run
+        .withSuccessHandler(function(materials) {
+          console.log('Получено материалов: ' + materials.length);
+          const select = document.getElementById('material');
+          
+          // Очищаем существующие опции кроме первой
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+          
+          materials.forEach(function(mat) {
+            const option = document.createElement('option');
+            option.value = mat;
+            option.textContent = mat;
+            select.appendChild(option);
+          });
+        })
+        .withFailureHandler(function(error) {
+          console.error('Ошибка загрузки материалов:', error);
+          handleError(error);
+        })
+        .getMaterials();
+    }
+
+    function loadOrganizations() {
+      console.log('Загрузка организаций...');
+      google.script.run
+        .withSuccessHandler(function(organizations) {
+          console.log('Получено организаций: ' + organizations.length);
+          const select = document.getElementById('organization');
+          
+          // Очищаем существующие опции кроме первой
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+          
+          organizations.forEach(function(org) {
+            const option = document.createElement('option');
+            option.value = org;
+            option.textContent = org;
+            select.appendChild(option);
+          });
+        })
+        .withFailureHandler(function(error) {
+          console.error('Ошибка загрузки организаций:', error);
+        })
+        .getOrganizations();
+    }
+
+    function loadDoctors() {
+      console.log('Загрузка врачей...');
+      google.script.run
+        .withSuccessHandler(function(doctors) {
+          console.log('Получено врачей: ' + doctors.length);
+          const select = document.getElementById('doctor');
+          
+          // Очищаем существующие опции кроме первой
+          while (select.options.length > 1) {
+            select.remove(1);
+          }
+          
+          doctors.forEach(function(doc) {
+            const option = document.createElement('option');
+            option.value = doc;
+            option.textContent = doc;
+            select.appendChild(option);
+          });
+        })
+        .withFailureHandler(function(error) {
+          console.error('Ошибка загрузки врачей:', error);
+        })
+        .getDoctors();
+    }
+
+    function updateIndicators() {
+      const category = document.getElementById('category').value;
+      const material = document.getElementById('material').value;
+
+      if (category && material) {
+        google.script.run
+          .withSuccessHandler(function(indicators) {
+            availableIndicators = indicators;
+            // Обновляем все существующие селекты показателей
+            updateAllIndicatorSelects();
+          })
+          .withFailureHandler(handleError)
+          .getIndicators(category, material);
+      }
+    }
+
+    function updateAllIndicatorSelects() {
+      const selects = document.querySelectorAll('.indicator-select');
+      selects.forEach(select => {
+        const currentValue = select.value;
+        // Очищаем опции
+        select.innerHTML = '<option value="">Выберите показатель...</option><option value="__new__">+ Добавить новый</option>';
+        
+        // Добавляем доступные показатели
+        availableIndicators.forEach(indicator => {
+          const option = document.createElement('option');
+          option.value = indicator;
+          option.textContent = indicator;
+          select.appendChild(option);
+        });
+        
+        // Восстанавливаем выбранное значение, если оно есть
+        if (currentValue) {
+          select.value = currentValue;
+        }
+      });
+    }
+
+    // Функция добавления строки записи - определяем глобально
+    window.addRecordRow = function() {
+      console.log('Добавление новой строки...');
+      const tbody = document.getElementById('recordsBody');
+      
+      if (!tbody) {
+        console.error('Не найден элемент recordsBody');
+        return;
+      }
+      
+      const row = document.createElement('tr');
+      row.id = 'row_' + rowCounter;
+
+      row.innerHTML = `
+        <td>
+          <select class="indicator-select" id="indicator_${rowCounter}" onchange="onIndicatorChange(${rowCounter})">
+            <option value="">Выберите показатель...</option>
+            <option value="__new__">+ Добавить новый</option>
+            ${availableIndicators.map(ind => `<option value="${ind}">${ind}</option>`).join('')}
+          </select>
+          <input type="text" id="indicator_custom_${rowCounter}" style="display:none; margin-top: 5px;" placeholder="Введите название показателя">
+        </td>
+        <td><input type="text" class="value-input" id="value_${rowCounter}" placeholder="Значение"></td>
+        <td><input type="text" class="min-max-input" id="min_${rowCounter}" placeholder="Min"></td>
+        <td><input type="text" class="min-max-input" id="max_${rowCounter}" placeholder="Max"></td>
+        <td><input type="text" class="unit-input" id="unit_${rowCounter}" placeholder="Ед."></td>
+        <td><input type="text" id="comment_${rowCounter}" placeholder="Комментарий"></td>
+        <td><button type="button" class="btn-remove" onclick="removeRow(${rowCounter})">Удалить</button></td>
+      `;
+
+      tbody.appendChild(row);
+      rowCounter++;
+      console.log('Строка добавлена, всего строк: ' + rowCounter);
+    }
+
+    function onIndicatorChange(rowId) {
+      const select = document.getElementById('indicator_' + rowId);
+      const customInput = document.getElementById('indicator_custom_' + rowId);
+      const category = document.getElementById('category').value;
+      const material = document.getElementById('material').value;
+
+      if (select.value === '__new__') {
+        // Показываем поле для ввода нового показателя
+        customInput.style.display = 'block';
+        // Очищаем поля Min, Max, Unit
+        document.getElementById('min_' + rowId).value = '';
+        document.getElementById('max_' + rowId).value = '';
+        document.getElementById('unit_' + rowId).value = '';
+      } else if (select.value !== '') {
+        // Скрываем поле для ввода
+        customInput.style.display = 'none';
+        customInput.value = '';
+        
+        // Загружаем информацию о показателе
+        google.script.run
+          .withSuccessHandler(function(info) {
+            document.getElementById('min_' + rowId).value = info.min || '';
+            document.getElementById('max_' + rowId).value = info.max || '';
+            document.getElementById('unit_' + rowId).value = info.unit || '';
+          })
+          .withFailureHandler(handleError)
+          .getIndicatorInfo(category, material, select.value);
+      } else {
+        customInput.style.display = 'none';
+        customInput.value = '';
+      }
+    }
+
+    function removeRow(rowId) {
+      const row = document.getElementById('row_' + rowId);
+      if (row) {
+        row.remove();
+      }
+    }
+
+    // Обработка отправки формы
+    document.getElementById('medicalForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const data = {
+        date: document.getElementById('date').value,
+        category: document.getElementById('category').value,
+        material: document.getElementById('material').value,
+        organization: document.getElementById('organization').value,
+        doctor: document.getElementById('doctor').value,
+        records: []
+      };
+
+      // Валидация основных полей
+      if (!data.date || !data.category || !data.material) {
+        alert('Пожалуйста, заполните дату, категорию и вид материала');
+        return;
+      }
+
+      // Собираем данные из таблицы
+      const rows = document.querySelectorAll('#recordsBody tr');
+      let hasValidRecord = false;
+
+      rows.forEach(row => {
+        const rowId = row.id.replace('row_', '');
+        const indicatorSelect = document.getElementById('indicator_' + rowId);
+        const indicatorCustom = document.getElementById('indicator_custom_' + rowId);
+        const value = document.getElementById('value_' + rowId).value;
+
+        let indicator = '';
+        let isNew = false;
+
+        if (indicatorSelect.value === '__new__' && indicatorCustom.value) {
+          indicator = indicatorCustom.value;
+          isNew = true;
+        } else if (indicatorSelect.value && indicatorSelect.value !== '__new__') {
+          indicator = indicatorSelect.value;
+        }
+
+        if (indicator && value) {
+          hasValidRecord = true;
+          data.records.push({
+            indicator: indicator,
+            value: value,
+            min: document.getElementById('min_' + rowId).value,
+            max: document.getElementById('max_' + rowId).value,
+            unit: document.getElementById('unit_' + rowId).value,
+            comment: document.getElementById('comment_' + rowId).value,
+            isNew: isNew
+          });
+        }
+      });
+
+      if (!hasValidRecord) {
+        alert('Пожалуйста, добавьте хотя бы один показатель с значением');
+        return;
+      }
+
+      // Показываем индикатор загрузки
+      showLoading(true);
+
+      // Отправляем данные на сервер
+      google.script.run
+        .withSuccessHandler(function(result) {
+          showLoading(false);
+          if (result.success) {
+            showSuccess(result.message);
+            setTimeout(function() {
+              if (confirm('Добавить еще записи?')) {
+                resetForm();
+              } else {
+                closeDialog();
+              }
+            }, 1500);
+          } else {
+            alert('Ошибка: ' + result.message);
+          }
+        })
+        .withFailureHandler(function(error) {
+          showLoading(false);
+          alert('Ошибка при сохранении: ' + error.toString());
+        })
+        .saveMedicalRecords(data);
+    });
+
+    function showLoading(show) {
+      const form = document.getElementById('medicalForm');
+      const loading = document.getElementById('loading');
+      const saveBtn = document.getElementById('saveBtn');
+
+      if (show) {
+        form.style.display = 'none';
+        loading.style.display = 'block';
+        saveBtn.disabled = true;
+      } else {
+        form.style.display = 'block';
+        loading.style.display = 'none';
+        saveBtn.disabled = false;
+      }
+    }
+
+    function showSuccess(message) {
+      const successDiv = document.getElementById('successMessage');
+      successDiv.textContent = message;
+      successDiv.style.display = 'block';
+      setTimeout(function() {
+        successDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    function resetForm() {
+      // Сохраняем категорию и материал
+      const category = document.getElementById('category').value;
+      const material = document.getElementById('material').value;
+      
+      // Очищаем форму
+      document.getElementById('medicalForm').reset();
+      
+      // Восстанавливаем дату
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('date').value = today;
+      
+      // Восстанавливаем категорию и материал
+      document.getElementById('category').value = category;
+      document.getElementById('material').value = material;
+      
+      // Очищаем таблицу показателей
+      document.getElementById('recordsBody').innerHTML = '';
+      rowCounter = 0;
+      
+      // Добавляем новую строку
+      addRecordRow();
+    }
+
+    function handleError(error) {
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка: ' + error.toString());
+    }
+
+    window.closeDialog = function() {
+      google.script.host.close();
+    }
